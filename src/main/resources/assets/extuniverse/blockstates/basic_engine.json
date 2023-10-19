@@ -2,10 +2,17 @@
   "forge_marker": 1,
   "defaults": {
     "custom": { "flip-v": true },
-    "model": "extuniverse:basic_engine.obj"
+    "model": "extuniverse:basic_engine.obj",
+    "culling": false
   },
   "variants": {
     "normal": [{}],
+    "facing=up": { "model": "extuniverse:basic_engine.obj"},
+    "facing=down": { "model": "extuniverse:basic_engine.obj", "x": 180},
+    "facing=south": { "model": "extuniverse:basic_engine.obj", "y": 0, "x": 90 },
+    "facing=west": { "model": "extuniverse:basic_engine.obj", "y": 90, "x": 90 },
+    "facing=north": { "model": "extuniverse:basic_engine.obj", "y": 180, "x": 90 },
+    "facing=east": { "model": "extuniverse:basic_engine.obj", "y": 270, "x": 90 },
     "inventory": [{"transform": "forge:default-block"}]
   }
 }
