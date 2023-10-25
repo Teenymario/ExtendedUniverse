@@ -4,8 +4,6 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraftforge.client.model.animation.FastTESR;
 import teenymario123.extuniverse.objects.tileEntity.basicEngineTE;
 
-import java.awt.*;
-
 public class basicEngineTESR extends FastTESR<basicEngineTE> {
 
     @Override

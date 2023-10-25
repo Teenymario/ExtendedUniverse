@@ -1,9 +1,8 @@
 package teenymario123.extuniverse.objects.blocks;
 
 import net.minecraft.block.*;
-import net.minecraft.block.properties.PropertyBool;
-import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import teenymario123.extuniverse.objects.tileEntity.basicEngineTE;
 import teenymario123.extuniverse.util.interfaces.*;
@@ -125,6 +124,36 @@ public class blockBase extends BlockDirectional implements IHasModel, ITileEntit
                     break;
             }
         }
+    }
+
+    @Override
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+        if(!worldIn.isRemote) {
+            basicEngineTE te = getTE(worldIn, pos);
+            int throttle = worldIn.getBlockState(pos).getValue(THROTTLE);
+
+            String heldItemName = player.getHeldItemMainhand().getDisplayName();
+
+            if(heldItemName.equals("up 1")) {
+                throttle += 1;
+            } else if(heldItemName.equals("up 10")) {
+                throttle += 10;
+            } else if(heldItemName.equals("down 1")) {
+                throttle -= 1;
+            } else if(heldItemName.equals("down 10")) {
+                throttle -= 10;
+            }
+
+            if(throttle < 0) {
+                worldIn.setBlockState(pos, state.withProperty(THROTTLE, 0));
+            } else if(throttle > 100) {
+                worldIn.setBlockState(pos, state.withProperty(THROTTLE, 100));
+            } else {
+                worldIn.setBlockState(pos, state.withProperty(THROTTLE, throttle));
+            }
+        }
+
+        return true;
     }
     //Engine activation
 
