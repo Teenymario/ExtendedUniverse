@@ -1,7 +1,6 @@
 package teenymario123.extuniverse.objects.tileEntity;
 
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
@@ -9,11 +8,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import static teenymario123.extuniverse.util.statics.THROTTLE;
-
 public class basicEngineTE extends TileEntity {
 
-    private int throttle = this.world.getBlockState(getPos()).getValue(THROTTLE);
+    private int throttle = 0;
 
     public int getThrottle() {
         return throttle;
@@ -58,12 +55,11 @@ public class basicEngineTE extends TileEntity {
 
     @Override
     public boolean shouldRefresh(World worldIn, BlockPos pos, IBlockState oldState, IBlockState newState) {
-        throttle = newState.getValue(THROTTLE);
-        //if(!newState.getBlock().getLocalizedName().equals(oldState.getBlock().getLocalizedName())) {
-        //  this.invalidate();
-        //}
-        Minecraft.getMinecraft().player.sendChatMessage(("Throttle value of " + throttle));
-        return true;
+        if(oldState.getBlock().getRegistryName() == newState.getBlock().getRegistryName()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override

@@ -5,6 +5,7 @@ import net.minecraft.item.*;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.*;
 import net.minecraftforge.client.event.*;
+import teenymario123.extuniverse.main;
 import teenymario123.extuniverse.util.interfaces.*;
 import teenymario123.extuniverse.init.*;
 import net.minecraft.block.*;
@@ -31,12 +32,17 @@ public class registryHandler {
             }
         }
     }
-    
+
     @SubscribeEvent
     public static void onBlockRegister(RegistryEvent.Register<Block> event) {
-        event.getRegistry().registerAll(blockInit.BLOCKS.toArray(new Block[0]));
+        for (Block block : blockInit.BLOCKS) {
+            event.getRegistry().register(block);
+        }
+
+        tileEntityInit.registerTE();
     }
-    
+
+
     public static void preInitRegistries() {
     }
     

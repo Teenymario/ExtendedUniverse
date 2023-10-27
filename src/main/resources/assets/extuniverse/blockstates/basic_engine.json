@@ -15,6 +15,10 @@
       "north": {"y": 180, "x": 90},
       "east": {"y": 270, "x": 90}
     },
+    "enabled": {
+      "false": {},
+      "true": {}
+    },
     "inventory": [{"transform": "forge:default-block"}]
   }
 }

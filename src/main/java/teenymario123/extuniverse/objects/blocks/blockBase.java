@@ -1,6 +1,10 @@
 package teenymario123.extuniverse.objects.blocks;
 
 import net.minecraft.block.*;
+import net.minecraft.block.properties.PropertyBool;
+import net.minecraft.block.properties.PropertyDirection;
+import net.minecraft.block.properties.PropertyInteger;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -18,21 +22,22 @@ import teenymario123.extuniverse.*;
 
 import java.util.Random;
 
-import static net.minecraft.block.BlockHopper.ENABLED;
-import static teenymario123.extuniverse.util.statics.THROTTLE;
 
 @SuppressWarnings("deprecation")
-public class blockBase extends BlockDirectional implements IHasModel, ITileEntityProvider {
+public class blockBase extends Block implements IHasModel, ITileEntityProvider {
+
+    public static final PropertyDirection FACING = PropertyDirection.create("facing");
+    public static final PropertyBool ENABLED = PropertyBool.create("enabled");
 
     public blockBase(String name, Material material) {
         super(material);
         this.fullBlock = false;
         this.setDefaultState(this.blockState.getBaseState()
                 .withProperty(FACING, EnumFacing.NORTH)
-                .withProperty(ENABLED, false)
-                .withProperty(THROTTLE, 0));
+                .withProperty(ENABLED, false));
         setRegistryName(name);
         setTranslationKey(name);
+        setSoundType(SoundType.METAL);
         this.setTickRandomly(true);
         setCreativeTab(main.ENGINES_TAB);
         blockInit.BLOCKS.add(this);
@@ -49,18 +54,18 @@ public class blockBase extends BlockDirectional implements IHasModel, ITileEntit
     public IBlockState getStateFromMeta(int meta) {
         return getDefaultState()
                 .withProperty(FACING, EnumFacing.byIndex(meta & 7))
-                .withProperty(ENABLED, (meta & 8) != 0)
-                .withProperty(THROTTLE, (meta >> 3) & 15);
+                .withProperty(ENABLED, (meta & 8) != 0);
     }
 
     @Override
     public int getMetaFromState(IBlockState state) {
-        return state.getValue(FACING).getIndex() + (state.getValue(ENABLED) ? 8 : 0) + (state.getValue(THROTTLE) << 3);
+        return state.getValue(FACING).getIndex() + (state.getValue(ENABLED) ? 8 : 0);
     }
+
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, FACING, ENABLED, THROTTLE);
+        return new BlockStateContainer(this, FACING, ENABLED);
     }
     //Rotations
 
@@ -130,7 +135,7 @@ public class blockBase extends BlockDirectional implements IHasModel, ITileEntit
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         if(!worldIn.isRemote) {
             basicEngineTE te = getTE(worldIn, pos);
-            int throttle = worldIn.getBlockState(pos).getValue(THROTTLE);
+            int throttle = te.getThrottle();
 
             String heldItemName = player.getHeldItemMainhand().getDisplayName();
 
@@ -145,12 +150,13 @@ public class blockBase extends BlockDirectional implements IHasModel, ITileEntit
             }
 
             if(throttle < 0) {
-                worldIn.setBlockState(pos, state.withProperty(THROTTLE, 0));
+                te.setThrottle(0);
             } else if(throttle > 100) {
-                worldIn.setBlockState(pos, state.withProperty(THROTTLE, 100));
+                te.setThrottle(100);
             } else {
-                worldIn.setBlockState(pos, state.withProperty(THROTTLE, throttle));
+                te.setThrottle(throttle);
             }
+            Minecraft.getMinecraft().player.sendChatMessage("Throttle: ".concat(String.valueOf(te.getThrottle())));
         }
 
         return true;

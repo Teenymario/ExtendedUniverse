@@ -4,6 +4,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
+import teenymario123.extuniverse.init.tileEntityInit;
 import teenymario123.extuniverse.proxy.*;
 import org.apache.logging.log4j.*;
 import net.minecraft.creativetab.*;
@@ -25,6 +26,7 @@ public class main {
     public void preInit(final FMLPreInitializationEvent event) {
         main.logger = event.getModLog();
         main.proxy.preInit(event);
+        tileEntityInit.registerTESR();
     }
     
     @EventHandler
